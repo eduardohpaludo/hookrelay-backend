@@ -23,21 +23,29 @@ def main():
     if result["ok"]:
         print(f"Succeeded, Status code: {result['status_code']}")
     else:
-        print(f"Failed, Status code: {result['status_code']}, Message: {result['error']}")
+        retryable = "Retryable is not possible"
+        if result['retryable']:
+            retryable = "Retryable is possible"
+        print(f"Failed, Status code: {result['status_code']}, Message: {result['error']}, Retryable: {retryable}")
     
 
 def send_webhook(url, payload):
     try:
         response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'}, timeout=5)
         response.raise_for_status()
-        return {"ok": True, "status_code": response.status_code, "error": None}
+        return {"ok": True, "status_code": response.status_code, "error": None, "retryable": False}
     
     except requests.exceptions.HTTPError as http_error:
-        return {"ok": False, "status_code": response.status_code, "error": str(http_error)}
+        retryable = False
+        if response.status_code >= 500 and response.status_code < 600:
+            retryable = True
+        elif response.status_code == 408 or response.status_code == 429:
+            retryable = True
+        return {"ok": False, "status_code": response.status_code, "error": str(http_error), "retryable": retryable}
     except requests.exceptions.Timeout as conn_timeout:
-        return {"ok": False, "status_code": None, "error": str(conn_timeout)}
+        return {"ok": False, "status_code": None, "error": str(conn_timeout), "retryable": True}
     except requests.exceptions.ConnectionError as conn_error:
-        return {"ok": False, "status_code": None, "error": str(conn_error)}
+        return {"ok": False, "status_code": None, "error": str(conn_error), "retryable": True}
 
 if __name__ == "__main__":
     main()
