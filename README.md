@@ -1,5 +1,5 @@
-# Project
+# HookRelay
 
-Webhook App for Cloud Architect studies.
+A multi-tenant webhook delivery platform: reliable, secure, observable.
 
-I'm a IT Professional over 15 years and I'm studing to become an Cloud Architect, so this project is to study and apply the concepts.
+Status: early development (v0.1 in progress).
