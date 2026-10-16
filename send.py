@@ -23,10 +23,17 @@ def main():
     if result["ok"]:
         print(f"Succeeded, Status code: {result['status_code']}")
     else:
-        retryable = "Retryable is not possible"
+        retryable = "permanent"
         if result['retryable']:
-            retryable = "Retryable is possible"
+            retryable = "retryable"
         print(f"Failed, Status code: {result['status_code']}, Message: {result['error']}, Retryable: {retryable}")
+
+def is_retryable_status(status_code):
+    if status_code >= 500 and status_code < 600:
+        return True
+    elif status_code == 408 or status_code == 429:
+        return True
+    return False
     
 
 def send_webhook(url, payload):
@@ -36,11 +43,7 @@ def send_webhook(url, payload):
         return {"ok": True, "status_code": response.status_code, "error": None, "retryable": False}
     
     except requests.exceptions.HTTPError as http_error:
-        retryable = False
-        if response.status_code >= 500 and response.status_code < 600:
-            retryable = True
-        elif response.status_code == 408 or response.status_code == 429:
-            retryable = True
+        retryable = is_retryable_status(response.status_code)
         return {"ok": False, "status_code": response.status_code, "error": str(http_error), "retryable": retryable}
     except requests.exceptions.Timeout as conn_timeout:
         return {"ok": False, "status_code": None, "error": str(conn_timeout), "retryable": True}
