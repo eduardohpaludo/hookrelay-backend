@@ -39,13 +39,14 @@ def test_send_webhook_error_500(monkeypatch):
 
 def test_send_webhook_error_timeout(monkeypatch):
     def fake_post(url, **kwargs):
-        raise requests.exceptions.Timeout
+        raise requests.exceptions.Timeout("Timeout")
 
     monkeypatch.setattr(requests, "post", fake_post)
 
     result = send_webhook("http://any.url", {"event": "test"})
 
     assert result["ok"] is False
+    assert "Timeout" in result["error"]
     assert result["status_code"] is None
     assert result["retryable"] is True
 
