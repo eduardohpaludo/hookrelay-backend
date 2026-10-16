@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 88
+
+select = [
+    "E",   # erros de estilo (pycodestyle)
+    "F",   # pyflakes (variáveis/imports)
+    "I",   # ordenação de imports (isort)
+    "B",   # bugbear (padrões perigosos)
+]
