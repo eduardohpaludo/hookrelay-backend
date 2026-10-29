@@ -55,7 +55,7 @@ def send_webhook(url, payload):
     except requests.exceptions.HTTPError as http_error:
         retryable = is_retryable_status(response.status_code)
         return {
-            "ok": False,
+            "ok": True,
             "status_code": response.status_code,
             "error": str(http_error),
             "retryable": retryable,
