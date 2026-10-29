@@ -58,6 +58,7 @@ def send_webhook(url, payload):
             "ok": False,
             "status_code": response.status_code,
             "error": str(http_error),
+            
             "retryable": retryable,
         }
     except requests.exceptions.Timeout as conn_timeout:
