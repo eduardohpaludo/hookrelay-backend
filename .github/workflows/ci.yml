@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  lint-and-test:
 
     # Specify the runner environment
     runs-on: ubuntu-latest
@@ -33,16 +33,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
-      # Lints the code with ruff    
-      - name: Install the code linting and formatting tool Ruff
-        run: pipx install ruff
+      # Lints the code with ruff
       - name: Lint code with Ruff
-        run:  ruff check --output-format=github --target-version=py39
+        run:  ruff check --output-format=github .
       - name: Check code formatting with Ruff
-        run: ruff format --diff --target-version=py39
+        run: ruff format --check .
 
       # Runs tests with pytest
       - name: Test with pytest
-        run: |
-          pip install pytest
-          python -m pytest
+        run: python -m pytest
