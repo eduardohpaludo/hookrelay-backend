@@ -56,7 +56,6 @@ def send_webhook(url, payload):
         retryable = is_retryable_status(response.status_code)
         return {
             "ok": True,
-            
             "status_code": response.status_code,
             "error": str(http_error),
             "retryable": retryable,
