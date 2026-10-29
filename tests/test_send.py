@@ -50,7 +50,7 @@ def test_send_webhook_error_timeout(monkeypatch):
     result = send_webhook("http://any.url", {"event": "test"})
 
     assert result["ok"] is False
-    assert "Timeout" in result["error"]
+    assert result["error"] == "Timeout"
     assert result["status_code"] is None
     assert result["retryable"] is True
 
