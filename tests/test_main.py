@@ -10,6 +10,7 @@ def test_health_success():
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
+
 def test_non_existent_route():
     response = client.get("/non-exist")
     assert response.status_code == 404
