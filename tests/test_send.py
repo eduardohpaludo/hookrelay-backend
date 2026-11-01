@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from send import is_retryable_status, send_webhook
+from hookrelay_backend.send import is_retryable_status, send_webhook
 
 
 class FakeResponse:
